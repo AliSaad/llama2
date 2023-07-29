@@ -179,12 +179,12 @@ def load_llm(model_name: str, temperature: float) -> Union[ChatOpenAI, LlamaCpp]
 #         # Assuming that the output of your Llama model in Replicate is the embeddings
 #         return output
 
-def load_embeddings(model_name: str) -> Union[OpenAIEmbeddings, LlamaReplicateEmbeddings]:
-    """
-    Load embedding model.
-    """
-    if model_name.startswith("gpt-"):
-        return OpenAIEmbeddings()
+# def load_embeddings(model_name: str) -> Union[OpenAIEmbeddings, LlamaReplicateEmbeddings]:
+#     """
+#     Load embedding model.
+#     """
+#     if model_name.startswith("gpt-"):
+#         return OpenAIEmbeddings()
     # elif model_name.startswith("llama-2-"):
     #     return LlamaReplicateEmbeddings('a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5')
 

@@ -31,11 +31,23 @@ Question: [][][][]{question}[][][][]
 Answer:"""
 
 
+# def init_page() -> None:
+#     st.set_page_config(
+#         page_title="Personal ChatGPT"
+#     )
+#     st.sidebar.title("Options")
+
 def init_page() -> None:
     st.set_page_config(
         page_title="Personal ChatGPT"
     )
     st.sidebar.title("Options")
+
+    # Input field for the Replicate API key
+    replicate_api_key = st.sidebar.text_input('Enter your Replicate API key', type='password')
+
+    # Store the API key in an environment variable so it's available when replicate.run() is called
+    os.environ['REPLICATE_API_TOKEN'] = replicate_api_key
 
 
 def init_messages() -> None:
@@ -114,17 +126,47 @@ def load_llm(model_name: str, temperature: float) -> Union[ChatOpenAI, LlamaCpp]
     if model_name.startswith("gpt-"):
         return ChatOpenAI(temperature=temperature, model_name=model_name)
     elif model_name.startswith("llama-2-"):
-        callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
-        return LlamaCpp(
-            model_path=f"./models/{model_name}.bin",
-            input={"temperature": temperature,
-                   "max_length": 2048,
-                   "top_p": 1
-                   },
-            n_ctx=2048,
-            callback_manager=callback_manager,
-            verbose=False,  # True
-        )
+        output = replicate.run('a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5', 
+                           input={"prompt": f"{string_dialogue} {prompt_input} Assistant: ",
+                                  "temperature":temperature, "top_p":1, "max_length":2048, "repetition_penalty":1})
+        return output
+    # elif model_name.startswith("llama-2-"):
+    #     callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
+    #     return LlamaCpp(
+    #         model_path=f"./models/{model_name}.bin",
+    #         input={"temperature": temperature,
+    #                "max_length": 2048,
+    #                "top_p": 1
+    #                },
+    #         n_ctx=2048,
+    #         callback_manager=callback_manager,
+    #         verbose=False,  # True
+    #     )
+
+# def load_llm(model_name: str, temperature: float):
+#     """
+#     Load LLM.
+#     """
+#     if model_name.startswith("gpt-"):
+#         return ChatOpenAI(temperature=temperature, model_name=model_name)
+#     elif model_name.startswith("llama-2-"):
+#         output = replicate.run('a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5', 
+#                            input={"prompt": f"{string_dialogue} {prompt_input} Assistant: ",
+#                                   "temperature":temperature, "top_p":1, "max_length":2048, "repetition_penalty":1})
+#     return output
+#         # Define the unique identifier for your model in Replicate
+#         model_id = 'a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5'
+
+#         # Define the inputs for your model
+#         model_input = {
+#             "temperature": temperature,
+#             "max_length": 2048,
+#             "top_p": 1
+#         }
+
+#         # Run the model in the cloud using Replicate and return the output
+#         return replicate.run(model_id, input=model_input)
+
 
 
 def load_embeddings(model_name: str) -> Union[OpenAIEmbeddings, LlamaCppEmbeddings]:

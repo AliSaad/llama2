@@ -5,20 +5,20 @@
 # # App title
 # st.set_page_config(page_title="🦙💬 Llama 2 PDF Chatbot")
 
-# # Replicate Credentials
-# with st.sidebar:
-#     st.title('🦙💬 Llama 2 PDF Chatbot')
-#     if 'REPLICATE_API_TOKEN' in st.secrets:
-#         st.success('API key already provided!', icon='✅')
-#         replicate_api = st.secrets['REPLICATE_API_TOKEN']
-#     else:
-#         replicate_api = st.text_input('Enter Replicate API token:', type='password')
-#         if not (replicate_api.startswith('r8_') and len(replicate_api)==40):
-#             st.warning('Please enter your credentials!', icon='⚠️')
-#         else:
-#             st.success('Proceed to entering your prompt message!', icon='👉')
-#     # st.markdown('📖 Learn how to build this app in this [blog](https://blog.streamlit.io/how-to-build-a-llama-2-chatbot/)!')
-# os.environ['REPLICATE_API_TOKEN'] = replicate_api
+# Replicate Credentials
+with st.sidebar:
+    st.title('🦙💬 Llama 2 PDF Chatbot')
+    if 'REPLICATE_API_TOKEN' in st.secrets:
+        st.success('API key already provided!', icon='✅')
+        replicate_api = st.secrets['REPLICATE_API_TOKEN']
+    else:
+        replicate_api = st.text_input('Enter Replicate API token:', type='password')
+        if not (replicate_api.startswith('r8_') and len(replicate_api)==40):
+            st.warning('Please enter your credentials!', icon='⚠️')
+        else:
+            st.success('Proceed to entering your prompt message!', icon='👉')
+    # st.markdown('📖 Learn how to build this app in this [blog](https://blog.streamlit.io/how-to-build-a-llama-2-chatbot/)!')
+os.environ['REPLICATE_API_TOKEN'] = replicate_api
 
 # # Store LLM generated responses
 # if "messages" not in st.session_state.keys():

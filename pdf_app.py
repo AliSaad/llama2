@@ -126,10 +126,10 @@ def load_llm(model_name: str, temperature: float) -> Union[ChatOpenAI, LlamaCpp]
     if model_name.startswith("gpt-"):
         return ChatOpenAI(temperature=temperature, model_name=model_name)
     elif model_name.startswith("llama-2-"):
-        output = replicate.run('a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5', 
+        LlamaCpp = replicate.run('a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5', 
                            input={"prompt": f"{string_dialogue} {prompt_input} Assistant: ",
                                   "temperature":temperature, "top_p":1, "max_length":2048, "repetition_penalty":1})
-        return output
+        return LlamaCpp
     # elif model_name.startswith("llama-2-"):
     #     callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
     #     return LlamaCpp(

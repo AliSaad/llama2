@@ -175,7 +175,11 @@ def load_embeddings(model_name: str) -> Union[OpenAIEmbeddings, LlamaCppEmbeddin
     if model_name.startswith("gpt-"):
         return OpenAIEmbeddings()
     elif model_name.startswith("llama-2-"):
-        return LlamaCppEmbeddings(model_path=f"./models/{model_name}.bin")
+        output = replicate.run('a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5', 
+                           input={"temperature":0.1, "top_p":0.9, "max_length":2048, "repetition_penalty":1})
+        return output
+
+        # return LlamaCppEmbeddings(model_path=f"./models/{model_name}.bin")
 
 
 def get_answer(llm, messages) -> tuple[str, float]:
